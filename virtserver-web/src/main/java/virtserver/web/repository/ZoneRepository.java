@@ -1,4 +1,4 @@
-package virtserver.data.api.repository;
+package virtserver.web.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
