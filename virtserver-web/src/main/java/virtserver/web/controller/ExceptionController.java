@@ -1,16 +1,20 @@
 package virtserver.web.controller;
 
-import lombok.Data;
+import org.springframework.core.NestedRuntimeException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import virtserver.web.dto.error.ErrorResponse;
 
-import java.util.ArrayList;
+import javax.persistence.EntityNotFoundException;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -18,33 +22,36 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleException(final MethodArgumentNotValidException ex) {
+    public ErrorResponse handleMANVException(final MethodArgumentNotValidException ex) {
+        
+        final List<ErrorResponse.ErrorDetails> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(e -> new ErrorResponse.ErrorDetails(e.getField(), e.getDefaultMessage()))
+                .collect(Collectors.toList());
 
-        final List<FieldError> errors = ex.getBindingResult().getFieldErrors();
-
-        final List<ErrorResponse.ErrorDetails> errorDetails = new ArrayList<>();
-        for (final FieldError fieldError : errors) {
-            final ErrorResponse.ErrorDetails error = new ErrorResponse.ErrorDetails();
-            error.setFieldName(fieldError.getField());
-            error.setMessage(fieldError.getDefaultMessage());
-            errorDetails.add(error);
-        }
-
-        final ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setErrors(errorDetails);
-
-        return errorResponse;
+        return new ErrorResponse(errors);
     }
-}
 
-@Data
-class ErrorResponse {
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleHMNRException(final HttpMessageNotReadableException ex) {
+        return this.getErrorResponse(ex.getRootCause(), ex.getMessage());
+    }
 
-    private List<ErrorDetails> errors;
+    @ExceptionHandler(value = {EmptyResultDataAccessException.class, EntityNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorResponse handleERDAException(final NestedRuntimeException ex) {
+        return this.getErrorResponse(ex.getRootCause(), ex.getMessage());
+    }
 
-    @Data
-    public static class ErrorDetails {
-        private String fieldName;
-        private String message;
+    private ErrorResponse getErrorResponse(final Throwable rootCause, final String message2) {
+        final String message = rootCause != null ? rootCause.getMessage() : message2;
+
+        final ErrorResponse.ErrorDetails details = new ErrorResponse.ErrorDetails(message);
+
+        return new ErrorResponse(Collections.singletonList(details));
     }
 }
