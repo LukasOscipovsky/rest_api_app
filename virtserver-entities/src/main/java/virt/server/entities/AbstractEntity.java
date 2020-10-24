@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class AbstractEntity {
 
-    @Column(name = "UPDATE_TIMESTAMP", columnDefinition = "TIMESTAMP(6)")
+    @Column(name = "UPDATE_TIMESTAMP")
     @UpdateTimestamp
     private LocalDateTime updateTimestamp;
 }
