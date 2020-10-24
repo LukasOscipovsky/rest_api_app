@@ -32,7 +32,7 @@ public class SpringFoxConfig {
                 .apiInfo(info)
                 .consumes(Set.of(MediaType.APPLICATION_JSON_VALUE))
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("virtserver.web"))
+                .apis(RequestHandlerSelectors.basePackage("virt.server.web"))
                 .paths(PathSelectors.any())
                 .build();
     }

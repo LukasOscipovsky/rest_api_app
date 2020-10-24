@@ -1,9 +1,11 @@
 package virt.server.data.api.repository;
 
+import virt.server.entities.AbstractEntity;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface Dao<T> {
+public interface Dao<T extends AbstractEntity> {
 
     Optional<T> get(long id);
 
