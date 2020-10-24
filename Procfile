@@ -1,1 +1,1 @@
-java -jar virtserver-web/target/virtserver-web-0.0.1-SNAPSHOT-spring-boot.jar --server.port=8888
+java --enable-preview -jar virtserver-web/target/virtserver-web-0.0.1-SNAPSHOT-spring-boot.jar --server.port=8888
