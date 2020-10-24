@@ -20,6 +20,8 @@
         <vavr.version>0.10.3</vavr.version>
         <hibernate.validator.version>6.1.6.Final</hibernate.validator.version>
         <model.mapper.version>2.3.8</model.mapper.version>
+        <springfox.version>3.0.0</springfox.version>
+        <jaxb.version>2.1</jaxb.version>
     </properties>
 
     <dependencies>
