@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Id {
+public class Identifier {
 
     private Long id;
 
     @JsonCreator
-    public Id(@JsonProperty("id") final Long id) {
+    public Identifier(@JsonProperty("id") final Long id) {
         this.id = id;
     }
 }

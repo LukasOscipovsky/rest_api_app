@@ -4,11 +4,16 @@ import org.springframework.stereotype.Repository;
 import virt.server.data.api.repository.Dao;
 import virt.server.entities.Device;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
 @Repository
 public class DeviceDaoImpl extends AbstractDao<Device> implements Dao<Device> {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public List<Device> getAll() {
@@ -24,5 +29,10 @@ public class DeviceDaoImpl extends AbstractDao<Device> implements Dao<Device> {
         q.setParameter("id", id);
         q.executeUpdate();
         return true;
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return this.entityManager;
     }
 }

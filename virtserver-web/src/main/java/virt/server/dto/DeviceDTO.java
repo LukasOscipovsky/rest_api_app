@@ -16,7 +16,7 @@ public class DeviceDTO extends MidDeviceDTO {
 
     @Delegate
     @JsonIgnore
-    private final Id identifier = new Id();
+    private final Identifier identifier = new Identifier();
 
     @Range(min = 0, message = "validation failed due to not having positive zoneId")
     private Long zoneId;

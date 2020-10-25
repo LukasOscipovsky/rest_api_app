@@ -4,11 +4,16 @@ import org.springframework.stereotype.Repository;
 import virt.server.data.api.repository.Dao;
 import virt.server.entities.Zone;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
 @Repository
 public class ZoneDaoImpl extends AbstractDao<Zone> implements Dao<Zone> {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public List<Zone> getAll() {
@@ -24,5 +29,10 @@ public class ZoneDaoImpl extends AbstractDao<Zone> implements Dao<Zone> {
         q.setParameter("id", id);
         q.executeUpdate();
         return true;
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return this.entityManager;
     }
 }

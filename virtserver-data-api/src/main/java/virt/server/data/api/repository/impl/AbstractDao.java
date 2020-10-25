@@ -3,15 +3,11 @@ package virt.server.data.api.repository.impl;
 import virt.server.entities.AbstractEntity;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 public abstract class AbstractDao<T extends AbstractEntity> {
-
-    @PersistenceContext
-    protected EntityManager entityManager;
 
     private final Class<T> entityBeanType;
 
@@ -20,24 +16,25 @@ public abstract class AbstractDao<T extends AbstractEntity> {
     }
 
     public Optional<T> get(final long id) {
-        return Optional.ofNullable(this.entityManager.find(this.entityBeanType, id));
+        return Optional.ofNullable(this.getEntityManager().find(this.entityBeanType, id));
     }
 
     public void save(final T t) {
-        this.entityManager.persist(t);
-        this.entityManager.flush();
+        this.getEntityManager().persist(t);
+        this.getEntityManager().flush();
     }
 
     public Optional<T> update(final T t) {
-        final T existingEntity = this.entityManager.find(this.entityBeanType, t.getId());
+        final T existingEntity = this.getEntityManager().find(this.entityBeanType, t.getId());
 
         final Supplier<Optional<T>> supplier = () -> {
-            final T merge = this.entityManager.merge(t);
-            this.entityManager.flush();
+            final T merge = this.getEntityManager().merge(t);
+            this.getEntityManager().flush();
             return Optional.of(merge);
         };
 
         return existingEntity == null ? Optional.empty() : supplier.get();
     }
 
+    protected abstract EntityManager getEntityManager();
 }

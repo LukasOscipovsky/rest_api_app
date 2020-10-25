@@ -5,11 +5,16 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import virt.server.dto.Id;
+import virt.server.dto.Identifier;
 
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Aspect to log after method returns all necessary data
+ *
+ * @author Lukas Oscipovsky
+ */
 @Aspect
 @Slf4j
 @Component
@@ -17,8 +22,8 @@ public class LoggingAspect {
 
     @AfterReturning(value = "@annotation(virt.server.aspect.Logging)", returning = "retVal")
     public void logAfterReturning(final JoinPoint joinPoint, final Object retVal) {
-        if (retVal instanceof Id id) {
-            log.debug("Method called successfully with name: [{}.{}] and returning value [{}]", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), id.getId());
+        if (retVal instanceof Identifier identifier) {
+            log.debug("Method called successfully with name: [{}.{}] and returning value [{}]", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), identifier.getId());
         } else if (retVal instanceof List list) {
             log.debug("Method called successfully with name: [{}.{}] and returning number of elements [{}]", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), list.size());
         } else {

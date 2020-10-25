@@ -2,7 +2,10 @@ package virt.server.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -21,6 +24,7 @@ public class Zone extends AbstractEntity {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @OneToMany(mappedBy = "zone")
+    @OneToMany(mappedBy = "zone", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Device> devices;
 }

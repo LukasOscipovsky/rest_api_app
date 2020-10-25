@@ -8,6 +8,9 @@ import virt.server.dto.error.ApiError;
 
 import java.util.Map;
 
+/**
+ * Converter to convert Either to Response Entity with all body data and status
+ */
 @Component
 public class ResponseConverter {
 

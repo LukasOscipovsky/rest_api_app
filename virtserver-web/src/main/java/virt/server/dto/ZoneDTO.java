@@ -17,7 +17,7 @@ public class ZoneDTO extends MiniZoneDTO {
 
     @Delegate
     @JsonIgnore
-    private Id identifier = new Id();
+    private Identifier identifier = new Identifier();
 
     private List<DeviceDTO> devices;
 }
