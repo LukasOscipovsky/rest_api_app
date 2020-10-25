@@ -23,7 +23,7 @@ public class LoggingAspect {
     @AfterReturning(value = "@annotation(virt.server.aspect.Logging)", returning = "retVal")
     public void logAfterReturning(final JoinPoint joinPoint, final Object retVal) {
         if (retVal instanceof Identifier identifier) {
-            log.debug("Method called successfully with name: [{}.{}] and returning value [{}]", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), identifier.getId());
+            log.debug("Method called successfully with name: [{}.{}] and returning id [{}]", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), identifier.getId());
         } else if (retVal instanceof List list) {
             log.debug("Method called successfully with name: [{}.{}] and returning number of elements [{}]", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), list.size());
         } else {
@@ -34,7 +34,7 @@ public class LoggingAspect {
     private void handleGetId(final JoinPoint joinPoint) {
         final Long l = (Long) Arrays.stream(joinPoint.getArgs()).filter(o -> o instanceof Long).findFirst().orElseThrow(() -> new IllegalArgumentException("Not Existing Long id argument"));
 
-        log.debug("Method called successfully with name: [{}.{}] and [{}]", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), l);
+        log.debug("Method called successfully with name: [{}.{}] and id : [{}]", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), l);
     }
 
 }
